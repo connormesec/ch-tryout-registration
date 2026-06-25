@@ -123,10 +123,12 @@
 .ch-tryout-field input,
 .ch-tryout-field select {
 	width: 100%;
-	background: var(--ch-tryout-raised);
+	/* background-color (not the `background` shorthand) so the select chevron's
+	   background-image set elsewhere isn't reset to none. */
+	background-color: var(--ch-tryout-raised);
 	border: 1px solid var(--ch-tryout-border);
 	border-radius: 6px;
-	color: var(--ch-tryout-text);
+	color: #fff;
 	padding: 11px 13px;
 	font-size: 1rem;
 	line-height: 1.3;
