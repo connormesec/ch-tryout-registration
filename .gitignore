@@ -1,0 +1,25 @@
+# macOS / OS
+.DS_Store
+Thumbs.db
+
+# Editors
+*.swp
+*~
+.idea/
+.vscode/
+
+# Local config / secrets (defensive — none committed today, keep it that way)
+.env
+*.env
+*.pem
+*.key
+*.p12
+credentials*.json
+client_secret*.json
+token*.json
+
+# Dependencies / build (none today)
+node_modules/
+vendor/
+dist/
+build/

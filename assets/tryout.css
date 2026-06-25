@@ -1,0 +1,134 @@
+/* Tryout registration form — inherits the theme's CSS custom properties
+   (--surface, --primary, --text, --border, …) with safe fallbacks so it still
+   looks right if the plugin is used outside the club-hockey theme. */
+
+.ch-tryout {
+	--ch-tryout-surface: var(--surface, #15181d);
+	--ch-tryout-raised: var(--surface-raised, #1d2127);
+	--ch-tryout-border: var(--border, #2c313a);
+	--ch-tryout-text: var(--text, #f2f4f7);
+	--ch-tryout-muted: var(--text-muted, #9aa3af);
+	--ch-tryout-primary: var(--primary, #1c61b0);
+	--ch-tryout-on-primary: var(--on-primary, #ffffff);
+
+	max-width: var(--content-width, 1100px);
+	margin: 0 auto;
+	color: var(--ch-tryout-text);
+}
+
+.ch-tryout-form {
+	background: var(--ch-tryout-surface);
+	border: 1px solid var(--ch-tryout-border);
+	border-radius: 10px;
+	padding: 28px;
+}
+
+.ch-tryout-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 18px 24px;
+}
+
+.ch-tryout-field {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+}
+
+.ch-tryout-field label {
+	font-family: var(--font-heading, "Barlow Condensed", sans-serif);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	font-size: 0.85rem;
+	margin-bottom: 6px;
+	color: var(--ch-tryout-muted);
+}
+
+.ch-tryout-req {
+	color: var(--ch-tryout-primary);
+}
+
+.ch-tryout-field input,
+.ch-tryout-field select {
+	width: 100%;
+	background: var(--ch-tryout-raised);
+	border: 1px solid var(--ch-tryout-border);
+	border-radius: 6px;
+	color: var(--ch-tryout-text);
+	padding: 11px 13px;
+	font-size: 1rem;
+	line-height: 1.3;
+}
+
+.ch-tryout-field input:focus,
+.ch-tryout-field select:focus {
+	outline: none;
+	border-color: var(--ch-tryout-primary);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--ch-tryout-primary) 35%, transparent);
+}
+
+.ch-tryout-field--invalid input,
+.ch-tryout-field--invalid select {
+	border-color: #dc3232;
+}
+
+.ch-tryout-submit {
+	margin-top: 24px;
+}
+
+.ch-tryout-submit button {
+	background: var(--ch-tryout-primary);
+	color: var(--ch-tryout-on-primary);
+	border: none;
+	border-radius: 6px;
+	padding: 14px 34px;
+	font-family: var(--font-heading, "Barlow Condensed", sans-serif);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	font-size: 1.1rem;
+	cursor: pointer;
+	transition: filter 0.15s ease;
+}
+
+.ch-tryout-submit button:hover {
+	filter: brightness(1.1);
+}
+
+/* Honeypot — visually and physically removed from layout, kept for bots. */
+.ch-tryout-hp {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.ch-tryout-notice {
+	border-radius: 8px;
+	padding: 14px 18px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+}
+
+.ch-tryout-notice--success {
+	background: rgba(70, 180, 80, 0.12);
+	border-color: rgba(70, 180, 80, 0.5);
+}
+
+.ch-tryout-notice--error {
+	background: rgba(220, 50, 50, 0.12);
+	border-color: rgba(220, 50, 50, 0.5);
+}
+
+.ch-tryout-notice p {
+	margin: 0;
+}
+
+@media (max-width: 600px) {
+	.ch-tryout-grid {
+		grid-template-columns: 1fr;
+	}
+	.ch-tryout-form {
+		padding: 20px;
+	}
+}
