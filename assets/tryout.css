@@ -68,6 +68,17 @@
 	text-align: center;
 }
 
+/* Hide the up/down spinner arrows on number inputs in the form. */
+.ch-tryout input[type="number"] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+.ch-tryout input[type="number"]::-webkit-outer-spin-button,
+.ch-tryout input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
 .ch-tryout-field input,
 .ch-tryout-field select {
 	width: 100%;
