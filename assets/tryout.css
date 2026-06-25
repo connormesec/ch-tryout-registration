@@ -56,6 +56,18 @@
 	letter-spacing: 0;
 }
 
+/* Grouped inputs (e.g. the top-3 jersey numbers) sit in one field, side by side. */
+.ch-tryout-numgroup {
+	display: flex;
+	gap: 8px;
+}
+.ch-tryout-numgroup input {
+	flex: 1 1 0;
+	width: auto;
+	min-width: 0;
+	text-align: center;
+}
+
 .ch-tryout-field input,
 .ch-tryout-field select {
 	width: 100%;

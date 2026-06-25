@@ -177,6 +177,13 @@ function ch_tryout_handle_save_fields() {
 			}
 		}
 
+		// Field grouping is configured in code (not UI-editable); preserve it.
+		foreach ( array( 'group', 'group_label' ) as $gk ) {
+			if ( isset( $old[ $gk ] ) && '' !== $old[ $gk ] ) {
+				$field[ $gk ] = $old[ $gk ];
+			}
+		}
+
 		$rows[] = array( 'order' => $order, 'field' => $field );
 	}
 

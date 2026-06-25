@@ -67,6 +67,61 @@ function ch_tryout_render_field( $field ) {
 }
 
 /**
+ * Render several fields that share a 'group' as ONE field cell: a single label
+ * plus the members' inputs side by side (used for the jersey-number top-3 boxes).
+ * Members are assumed to be plain inputs (text/email/tel/number/date), not selects.
+ *
+ * @param string $group   Group key.
+ * @param array  $members Field configs in the group.
+ * @return string
+ */
+function ch_tryout_render_field_group( $group, $members ) {
+	if ( empty( $members ) ) {
+		return '';
+	}
+	$first = $members[0];
+	$label = ! empty( $first['group_label'] ) ? $first['group_label'] : $first['label'];
+
+	$any_required = false;
+	foreach ( $members as $m ) {
+		if ( ! isset( $m['required'] ) || ! empty( $m['required'] ) ) {
+			$any_required = true;
+			break;
+		}
+	}
+
+	ob_start();
+	?>
+	<p class="ch-tryout-field ch-tryout-field--group ch-tryout-field--<?php echo esc_attr( $group ); ?>">
+		<label><?php echo esc_html( $label ); ?> <?php if ( $any_required ) : ?><span class="ch-tryout-req" aria-hidden="true">*</span><?php else : ?><span class="ch-tryout-opt">(optional)</span><?php endif; ?></label>
+		<span class="ch-tryout-numgroup">
+			<?php foreach ( $members as $m ) : ?>
+				<?php
+				$id   = 'ch_tryout_' . $m['key'];
+				$name = 'ch_tryout[' . $m['key'] . ']';
+				$req  = ! isset( $m['required'] ) || ! empty( $m['required'] );
+				$ph   = isset( $m['placeholder'] ) ? $m['placeholder'] : '';
+				?>
+				<input
+					type="<?php echo esc_attr( $m['type'] ); ?>"
+					id="<?php echo esc_attr( $id ); ?>"
+					name="<?php echo esc_attr( $name ); ?>"
+					aria-label="<?php echo esc_attr( $m['label'] ); ?>"
+					<?php if ( '' !== $ph ) : ?>placeholder="<?php echo esc_attr( $ph ); ?>"<?php endif; ?>
+					<?php if ( 'number' === $m['type'] ) : ?>
+						<?php if ( isset( $m['min'] ) && '' !== $m['min'] ) : ?>min="<?php echo esc_attr( $m['min'] ); ?>" <?php endif; ?>
+						<?php if ( isset( $m['max'] ) && '' !== $m['max'] ) : ?>max="<?php echo esc_attr( $m['max'] ); ?>" <?php endif; ?>
+						step="1" inputmode="numeric"
+					<?php endif; ?>
+					<?php echo $req ? 'required' : ''; ?>>
+			<?php endforeach; ?>
+		</span>
+	</p>
+	<?php
+	return ob_get_clean();
+}
+
+/**
  * Shortcode callback.
  *
  * @return string
@@ -102,8 +157,22 @@ function ch_tryout_form_shortcode() {
 
 		<div class="ch-tryout-grid">
 			<?php
-			foreach ( ch_tryout_fields() as $field ) {
-				echo ch_tryout_render_field( $field ); // Escaped inside.
+			$all   = array_values( ch_tryout_fields() );
+			$count = count( $all );
+			for ( $i = 0; $i < $count; $i++ ) {
+				$group = isset( $all[ $i ]['group'] ) ? $all[ $i ]['group'] : '';
+				if ( '' !== $group ) {
+					// Gather consecutive fields sharing this group into one cell.
+					$members = array();
+					while ( $i < $count && ( isset( $all[ $i ]['group'] ) ? $all[ $i ]['group'] : '' ) === $group ) {
+						$members[] = $all[ $i ];
+						$i++;
+					}
+					$i--; // step back for the outer loop's increment
+					echo ch_tryout_render_field_group( $group, $members ); // Escaped inside.
+				} else {
+					echo ch_tryout_render_field( $all[ $i ] ); // Escaped inside.
+				}
 			}
 			?>
 		</div>
