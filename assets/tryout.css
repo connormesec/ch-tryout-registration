@@ -79,6 +79,47 @@
 	margin: 0;
 }
 
+/* Make the native calendar icon visible (white) on the dark theme. */
+.ch-tryout input[type="date"]::-webkit-calendar-picker-indicator {
+	filter: invert(1);
+	opacity: 0.8;
+	cursor: pointer;
+}
+
+/* Dropdowns: drop the native arrow for a custom chevron with room from the edge. */
+.ch-tryout-field select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	padding-right: 40px;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%239aa3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 14px center;
+	background-size: 12px 8px;
+}
+
+/* Always-white input text, in every state. */
+.ch-tryout-field input,
+.ch-tryout-field select {
+	color: #fff;
+	-webkit-text-fill-color: #fff;
+	caret-color: #fff;
+}
+
+/* Browser autofill otherwise repaints fields with a light background and dark
+   text — keep them on the form's dark surface with white text. */
+.ch-tryout-field input:-webkit-autofill,
+.ch-tryout-field input:-webkit-autofill:hover,
+.ch-tryout-field input:-webkit-autofill:focus,
+.ch-tryout-field input:-webkit-autofill:active,
+.ch-tryout-field select:-webkit-autofill {
+	-webkit-text-fill-color: #fff;
+	-webkit-box-shadow: 0 0 0 1000px var(--ch-tryout-raised) inset;
+	box-shadow: 0 0 0 1000px var(--ch-tryout-raised) inset;
+	caret-color: #fff;
+	transition: background-color 100000s ease-in-out 0s;
+}
+
 .ch-tryout-field input,
 .ch-tryout-field select {
 	width: 100%;
