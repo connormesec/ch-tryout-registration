@@ -52,10 +52,15 @@ function ch_tryout_handle_submit() {
 	$raw   = isset( $_POST['ch_tryout'] ) && is_array( $_POST['ch_tryout'] ) ? wp_unslash( $_POST['ch_tryout'] ) : array();
 	$clean = array();
 	foreach ( ch_tryout_fields() as $field ) {
-		$value = isset( $raw[ $field['key'] ] ) ? $raw[ $field['key'] ] : '';
-		$value = ch_tryout_sanitize_value( $field, $value );
-		if ( '' === $value ) {
-			ch_tryout_redirect_error( $redirect, 'All fields are required. Please complete the form.' );
+		$value    = isset( $raw[ $field['key'] ] ) ? $raw[ $field['key'] ] : '';
+		$value    = ch_tryout_sanitize_value( $field, $value );
+		$required = ! isset( $field['required'] ) || ! empty( $field['required'] );
+		if ( $required && '' === $value ) {
+			ch_tryout_redirect_error( $redirect, 'Please complete all required fields.' );
+		}
+		// An optional date left blank stores NULL (the column is nullable).
+		if ( '' === $value && 'date' === $field['type'] ) {
+			$value = null;
 		}
 		$clean[ $field['key'] ] = $value;
 	}
@@ -140,7 +145,20 @@ function ch_tryout_sanitize_value( $field, $value ) {
 			return ( $d && $d->format( 'Y-m-d' ) === $value ) ? $value : '';
 
 		case 'select':
-			return in_array( $value, $field['options'], true ) ? $value : '';
+			$options = isset( $field['options'] ) && is_array( $field['options'] ) ? $field['options'] : array();
+			return in_array( $value, $options, true ) ? $value : '';
+
+		case 'number':
+			if ( '' === $value || ! is_numeric( $value ) ) {
+				return '';
+			}
+			$n   = (int) $value;
+			$min = isset( $field['min'] ) && '' !== $field['min'] ? (int) $field['min'] : null;
+			$max = isset( $field['max'] ) && '' !== $field['max'] ? (int) $field['max'] : null;
+			if ( ( null !== $min && $n < $min ) || ( null !== $max && $n > $max ) ) {
+				return '';
+			}
+			return (string) $n;
 
 		case 'text':
 		default:

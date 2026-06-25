@@ -16,9 +16,20 @@ Drop the shortcode on any page:
 ## Admin
 
 - **Tryout Registrants** (top-level menu) — view submissions and export to CSV.
+- **Form Fields** (under Tryout Registrants) — add, edit, reorder, or remove the
+  registration fields with no code. Set each field's type (Text, Email, Phone,
+  Number, Date, Dropdown), edit dropdown options, and toggle Required. Saving a
+  new field automatically adds its database column. A field's type is locked
+  after creation (delete & re-add to change it), and removing a field keeps its
+  data column. Reset to defaults at any time.
 - **Settings** (`Settings → Tryout Registration`) — configure:
   - **Web App URL** — the deployed Google Apps Script Web App endpoint.
   - **Notification email(s)** — who gets emailed on a new registration (falls back to the site admin email).
+
+> The built-in default fields are defined in `ch_tryout_default_fields()`; once
+> you save changes on the Form Fields screen they're stored in the
+> `ch_tryout_fields_config` option. If you change fields after registrations
+> start, update your Google Sheet's header row to match.
 
 ## Google Sheets sync
 

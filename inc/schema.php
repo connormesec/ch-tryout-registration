@@ -24,7 +24,9 @@ function ch_tryout_schema_sql() {
 
 	$field_cols = '';
 	foreach ( ch_tryout_fields() as $field ) {
-		$field_cols .= "\n\t\t{$field['key']} {$field['col']},";
+		// Backtick-quote the column name so keys that happen to be MySQL reserved
+		// words (order, group, date, …) can't break the CREATE TABLE statement.
+		$field_cols .= "\n\t\t`{$field['key']}` {$field['col']},";
 	}
 
 	// dbDelta is whitespace/format sensitive: two spaces after PRIMARY KEY, etc.

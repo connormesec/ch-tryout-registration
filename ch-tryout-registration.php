@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       CH Tryout Registration
  * Description:        Tryout registration form that stores players in the database and syncs them to a Google Sheet tab via the Google Sheets API (OAuth). Shortcode: [ch_tryout_form].
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Connor Mesec
  * License:           GPL-2.0-or-later
  * Text Domain:       ch-tryout
@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CH_TRYOUT_VERSION', '1.0.0' );
-define( 'CH_TRYOUT_DB_VERSION', '1' );
+define( 'CH_TRYOUT_VERSION', '1.1.0' );
+define( 'CH_TRYOUT_DB_VERSION', '2' );
 define( 'CH_TRYOUT_FILE', __FILE__ );
 define( 'CH_TRYOUT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CH_TRYOUT_URL', plugin_dir_url( __FILE__ ) );
@@ -39,8 +39,8 @@ define( 'CH_TRYOUT_URL', plugin_dir_url( __FILE__ ) );
  *
  * @return array<int,array<string,mixed>>
  */
-function ch_tryout_fields() {
-	return array(
+function ch_tryout_default_fields() {
+	$fields = array(
 		array(
 			'key'      => 'first_name',
 			'label'    => 'First name',
@@ -103,6 +103,35 @@ function ch_tryout_fields() {
 			'col'      => "VARCHAR(10) NOT NULL DEFAULT ''",
 		),
 		array(
+			'key'      => 'jersey_1',
+			'label'    => 'Jersey number — 1st choice',
+			'type'     => 'number',
+			'sanitize' => 'number',
+			'min'      => 1,
+			'max'      => 90,
+			'col'      => "VARCHAR(20) NOT NULL DEFAULT ''",
+		),
+		array(
+			'key'      => 'jersey_2',
+			'label'    => 'Jersey number — 2nd choice',
+			'type'     => 'number',
+			'sanitize' => 'number',
+			'min'      => 1,
+			'max'      => 90,
+			'required' => false,
+			'col'      => "VARCHAR(20) NOT NULL DEFAULT ''",
+		),
+		array(
+			'key'      => 'jersey_3',
+			'label'    => 'Jersey number — 3rd choice',
+			'type'     => 'number',
+			'sanitize' => 'number',
+			'min'      => 1,
+			'max'      => 90,
+			'required' => false,
+			'col'      => "VARCHAR(20) NOT NULL DEFAULT ''",
+		),
+		array(
 			'key'         => 'height',
 			'label'       => 'Height',
 			'type'        => 'text',
@@ -135,6 +164,27 @@ function ch_tryout_fields() {
 			'col'         => "VARCHAR(150) NOT NULL DEFAULT ''",
 		),
 	);
+	// Defaults are all required unless a field opts out.
+	foreach ( $fields as &$f ) {
+		if ( ! isset( $f['required'] ) ) {
+			$f['required'] = true;
+		}
+	}
+	unset( $f );
+	return $fields;
+}
+
+/**
+ * The active field config: the admin-managed list (option ch_tryout_fields_config)
+ * if present, otherwise the built-in defaults. Every consumer — form markup,
+ * validation, DB schema, registrants/CSV columns, emails, and the Sheets sync —
+ * reads fields through here, so editing the option changes the form everywhere.
+ *
+ * @return array<int,array<string,mixed>>
+ */
+function ch_tryout_fields() {
+	$config = get_option( 'ch_tryout_fields_config', null );
+	return ( is_array( $config ) && ! empty( $config ) ) ? $config : ch_tryout_default_fields();
 }
 
 /** Fully-qualified registrants table name. */
@@ -151,6 +201,7 @@ require_once CH_TRYOUT_PATH . 'inc/form.php';
 require_once CH_TRYOUT_PATH . 'inc/cache.php';
 require_once CH_TRYOUT_PATH . 'inc/handler.php';
 require_once CH_TRYOUT_PATH . 'inc/admin.php';
+require_once CH_TRYOUT_PATH . 'inc/fields-admin.php';
 
 register_activation_hook( __FILE__, 'ch_tryout_install' );
 

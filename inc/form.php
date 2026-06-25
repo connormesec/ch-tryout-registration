@@ -34,15 +34,17 @@ function ch_tryout_render_field( $field ) {
 	$id          = 'ch_tryout_' . $field['key'];
 	$name        = 'ch_tryout[' . $field['key'] . ']';
 	$placeholder = isset( $field['placeholder'] ) ? $field['placeholder'] : '';
+	$required    = ! isset( $field['required'] ) || ! empty( $field['required'] );
+	$options     = isset( $field['options'] ) && is_array( $field['options'] ) ? $field['options'] : array();
 
 	ob_start();
 	?>
 	<p class="ch-tryout-field ch-tryout-field--<?php echo esc_attr( $field['type'] ); ?>">
-		<label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $field['label'] ); ?> <span class="ch-tryout-req" aria-hidden="true">*</span></label>
+		<label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $field['label'] ); ?> <?php if ( $required ) : ?><span class="ch-tryout-req" aria-hidden="true">*</span><?php else : ?><span class="ch-tryout-opt">(optional)</span><?php endif; ?></label>
 		<?php if ( 'select' === $field['type'] ) : ?>
-			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" required>
+			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>"<?php echo $required ? ' required' : ''; ?>>
 				<option value="">— Please choose an option —</option>
-				<?php foreach ( $field['options'] as $opt ) : ?>
+				<?php foreach ( $options as $opt ) : ?>
 					<option value="<?php echo esc_attr( $opt ); ?>"><?php echo esc_html( $opt ); ?></option>
 				<?php endforeach; ?>
 			</select>
@@ -52,7 +54,12 @@ function ch_tryout_render_field( $field ) {
 				id="<?php echo esc_attr( $id ); ?>"
 				name="<?php echo esc_attr( $name ); ?>"
 				<?php if ( $placeholder ) : ?>placeholder="<?php echo esc_attr( $placeholder ); ?>"<?php endif; ?>
-				required>
+				<?php if ( 'number' === $field['type'] ) : ?>
+					<?php if ( isset( $field['min'] ) && '' !== $field['min'] ) : ?>min="<?php echo esc_attr( $field['min'] ); ?>" <?php endif; ?>
+					<?php if ( isset( $field['max'] ) && '' !== $field['max'] ) : ?>max="<?php echo esc_attr( $field['max'] ); ?>" <?php endif; ?>
+					step="1" inputmode="numeric"
+				<?php endif; ?>
+				<?php echo $required ? 'required' : ''; ?>>
 		<?php endif; ?>
 	</p>
 	<?php

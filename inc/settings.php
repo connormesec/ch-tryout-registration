@@ -129,7 +129,13 @@ function ch_tryout_handle_test() {
 
 	$sample = array( 'created_at' => current_time( 'mysql' ) );
 	foreach ( ch_tryout_fields() as $field ) {
-		$sample[ $field['key'] ] = 'select' === $field['type'] ? $field['options'][0] : ( 'TEST ' . $field['label'] );
+		if ( 'select' === $field['type'] ) {
+			$sample[ $field['key'] ] = ! empty( $field['options'] ) ? $field['options'][0] : '';
+		} elseif ( 'number' === $field['type'] ) {
+			$sample[ $field['key'] ] = (string) ( isset( $field['min'] ) ? (int) $field['min'] : 1 );
+		} else {
+			$sample[ $field['key'] ] = 'TEST ' . $field['label'];
+		}
 	}
 	$result = ch_tryout_sync_to_sheet( $sample );
 

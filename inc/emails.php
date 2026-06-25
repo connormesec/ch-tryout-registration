@@ -202,13 +202,16 @@ function ch_tryout_sample_data() {
 	foreach ( ch_tryout_fields() as $field ) {
 		switch ( $field['type'] ) {
 			case 'select':
-				$sample[ $field['key'] ] = $field['options'][0];
+				$sample[ $field['key'] ] = ! empty( $field['options'] ) ? $field['options'][0] : '';
 				break;
 			case 'email':
 				$sample[ $field['key'] ] = 'player@example.com';
 				break;
 			case 'tel':
 				$sample[ $field['key'] ] = '5551234567';
+				break;
+			case 'number':
+				$sample[ $field['key'] ] = (string) ( isset( $field['min'] ) ? (int) $field['min'] : 1 );
 				break;
 			case 'date':
 				$sample[ $field['key'] ] = '2005-04-12';

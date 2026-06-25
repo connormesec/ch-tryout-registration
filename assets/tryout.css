@@ -48,6 +48,14 @@
 	color: var(--ch-tryout-primary);
 }
 
+.ch-tryout-opt {
+	color: var(--ch-tryout-muted);
+	font-weight: 400;
+	text-transform: none;
+	font-size: 0.85em;
+	letter-spacing: 0;
+}
+
 .ch-tryout-field input,
 .ch-tryout-field select {
 	width: 100%;
