@@ -6,6 +6,7 @@
  * Author:            Connor Mesec
  * License:           GPL-2.0-or-later
  * Text Domain:       ch-tryout
+ * Update URI:        https://github.com/connormesec/ch-tryout-registration
  *
  * Companion to the Club Hockey Divi child theme. Uses the same ch_ naming
  * conventions but is namespaced ch_tryout_* to avoid collisions with the theme.
@@ -209,6 +210,7 @@ require_once CH_TRYOUT_PATH . 'inc/cache.php';
 require_once CH_TRYOUT_PATH . 'inc/handler.php';
 require_once CH_TRYOUT_PATH . 'inc/admin.php';
 require_once CH_TRYOUT_PATH . 'inc/fields-admin.php';
+require_once CH_TRYOUT_PATH . 'inc/update.php';
 
 register_activation_hook( __FILE__, 'ch_tryout_install' );
 

@@ -438,6 +438,10 @@ function ch_tryout_render_settings() {
 
 		<h2 class="title">Usage</h2>
 		<p>Place the shortcode <code>[ch_tryout_form]</code> on any page to display the registration form. That page is automatically excluded from LiteSpeed page cache so the form's security nonce never goes stale.</p>
+
+		<h2 class="title">Updates</h2>
+		<p>This plugin updates itself from its GitHub releases (<code>connormesec/ch-tryout-registration</code>). Installed version: <strong><?php echo esc_html( CH_TRYOUT_VERSION ); ?></strong>.</p>
+		<p>To ship an update: bump the version, push, then create a GitHub release and tick <em>“Set as the latest release.”</em> Every live site then shows an update prompt on its <strong>Plugins</strong> screen (within ~12 hours, or right away if you <a href="<?php echo esc_url( admin_url( 'update-core.php?force-check=1' ) ); ?>">check for updates now</a>).</p>
 	</div>
 	<?php
 }
